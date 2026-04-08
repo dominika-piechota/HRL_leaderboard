@@ -15,6 +15,7 @@ import ast
 import json
 import logging
 import random
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -493,7 +494,7 @@ class DQN(BaseLearningModel):
     def reset(self)->None:
         # reset buffer, loss logging, epsilon, all training changeable params, (weights and biases?) -> check how this is done in pytorch
         # set training flag to true
-        raise NotImplementedError
+        raise NotImplementedError("reset(self) not implemented for DQN class.")
 
     def act(self, state: np.ndarray) -> int:
         """
@@ -516,7 +517,7 @@ class DQN(BaseLearningModel):
         Add (s,a,r) tuple to the buffer.
         """
         if not self.is_training:
-            raise RuntimeError("Cannot call `push()` in evaluation mode. Set `self.is_training = True` to update DQN buffer.")
+            warnings.warn("You are pushing to DQN replay memory in eval mode")
 
         self.memory.append((state, action, reward)) # All interactions are single-step, so we only store the last state, action, and reward
         return
