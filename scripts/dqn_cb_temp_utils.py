@@ -497,9 +497,6 @@ class DQN(BaseLearningModel):
         self.q_network.eval()
 
 
-
-
-
     def act(self, state: np.ndarray) -> int:
         """
         Select action using epsilon-greedy policy.
@@ -638,13 +635,14 @@ def run_episode(
     Responsibilities:
         - Reset environment and global observation state
         - Iterate over agents using env.agent_iter() (runs two loops - in first agents are active and select actions, in second agents are terminated - reward collection)
+            
             - Active agents loop:
                 - update global observation with environment state change (since last agent departure timestamp)
                 - update global observation with current (starting) agent
                 - construct observation for current agent
                 - select action for current agent via DQN policy
                 - Optinally: cache agent observation and action for replay buffer (if enabled)
-                
+
             - Terminated/truncated agents loop:
                 - record agent travel time in global observation (if not available earlier, during env state update)
                 - Optionally: cache agent reward for replay buffer (if enabled)
@@ -655,14 +653,15 @@ def run_episode(
 
     Args:
         env (TrafficEnvironment):
-            Multi-agent traffic simulation environment.
-            Implemented in the Petting-Zoo style API.
+            Multi-agent traffic simulation environment implemented in the Petting-Zoo style API.
             Responsible for managing agent lifecycle, state transitions, and reward signaling.
         dqn (DQN):
-            Deep Q-Network object encapsulating the policy network and experience replay buffer. #TODO: review, curate
-            Provides methods for action selection (ε-greedy), learning updates, and sampling from memory.
+            Deep Q-Network object. Encapsulates policy network, experience replay buffer, and training logic.
+            Provides methods for action selection (ε-greedy), learning updates, and memory sampling.
         global_observation (GlobalObservation):
-            TODO
+            Instance of the GlobalObservation class. Maintains the global state table of all AV agents in the environment.
+            Updated throughout the episode to reflect agent departures, selected actions, and recorded travel times.
+            Used to construct per-agent state views used as input to DQN network. Enables optional transition caching for DQN training.
         agent_lookup (dict): 
             Mapping of TrafficEnvironment agent identifiers to agent objects. 
 
