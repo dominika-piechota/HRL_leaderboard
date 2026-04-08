@@ -34,12 +34,13 @@ from utils           import print_agent_counts
 from routerl import Keychain as kc
 
 
+# TODO: view remaining NOTE/TODO annotations
+
 
 ###############################
 # Global observation
 ################################
-# NOTE: docstrs reviewed
-# TODO: view remaining NOTE/TODO annotations in this class
+
 class GlobalObservation:
     """
     Manage the global observation of the AV fleet.
@@ -396,8 +397,6 @@ class GlobalObservation:
 
 
 
-        
-
 ###############################
 # DQN Network
 ################################
@@ -597,9 +596,6 @@ class DQN(BaseLearningModel):
             q_values = self.q_network(state_tensor)
         action = torch.argmax(q_values).item()
         return action
-
-
-
 
 
 class Network(nn.Module):

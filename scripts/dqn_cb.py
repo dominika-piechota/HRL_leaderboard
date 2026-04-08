@@ -37,7 +37,7 @@ from routerl import Keychain as kc
 from dqn_cb_temp_utils import GlobalObservation, Network, DQN, run_episode
 
 
-# TODO: check for 'todo' and 'note' & clean
+# TODO: view remaining NOTE/TODO annotations + cleaning
 DEBUG = True
 
 
@@ -276,7 +276,6 @@ if __name__ == "__main__":
 
     for episode in range(experience_collecting_episodes):
         print(f"\nExperience collecting episode {episode}/{experience_collecting_episodes}")
-        # NOTE: enable qnet push in eval mode?
 
         assert global_observation.collect_transitions == True
 
