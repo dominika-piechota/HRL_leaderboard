@@ -6,6 +6,34 @@ import sys
 from typing import Optional
 
 
+
+
+class CSVLossLogger:
+
+    def __init__(self, path: str, columns: list[str]):
+        self.path = path
+        self.columns = columns
+
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+
+        self.file = open(self.path, "w", newline="", encoding="utf-8")
+        self.writer = csv.DictWriter(self.file, fieldnames=self.columns, extrasaction='ignore')
+        self.writer.writeheader()
+
+    def __call__(self, record: dict)->None:
+        self.writer.writerow({column: record.get(column, "") for column in self.columns})
+        self.file.flush() # push buffered data to OS immediately
+
+    def close(self):
+        # Development note: instead of manual closing, context manager may be added to handle file opening/closing safely using 'with open(...)'
+        self.file.close()
+
+
+
+
+
+
+
 def get_episodes(ep_path: str) -> list[int]:
     """Get the episodes data
 
