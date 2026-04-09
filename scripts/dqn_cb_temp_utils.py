@@ -429,8 +429,11 @@ class DQN(BaseLearningModel):
 
         if min_buffer_size < batch_size:
             raise ValueError(f"min_buffer_size ({min_buffer_size}) must be >= batch_size ({batch_size}) to allow sampling a full batch.")
-        assert min_buffer_size > 0
-        assert min_buffer_size <= max_buffer_size #NOTE: change to value errors?
+        if min_buffer_size <= 0:
+            raise ValueError(f"min_buffer_size ({min_buffer_size}) must be positive.")
+        if min_buffer_size > max_buffer_size:
+            raise ValueError(f"min_buffer_size ({min_buffer_size}) cannot exceed max_buffer_size ({max_buffer_size}).")
+
 
         super().__init__()
         self.device = device
