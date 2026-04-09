@@ -517,7 +517,7 @@ class DQN(BaseLearningModel):
         self.memory.append((state, action, reward))
         return
 
-    def learn(self)->None:
+    def learn(self, loss_logger: Optional[Callable[[dict], None]] = None)->None:
         """
         Update network parameters.
 
@@ -566,15 +566,16 @@ class DQN(BaseLearningModel):
 
         # Record loss
         avg_iteration_loss = sum(batch_losses) / len(batch_losses)
-        self.training_loss_records.append(
-            {
-                "iteration": len(self.training_loss_records)+1,
-                "loss": avg_iteration_loss,
-                # "batch_losses": batch_losses #optionally
-            }
-        )
+        iteration_loss_record = {
+            "iteration": len(self.training_loss_records)+1,
+            "loss": avg_iteration_loss,
+            # "batch_losses": batch_losses #optionally
+        }
+        self.training_loss_records.append(iteration_loss_record)
 
-        # 
+        # Stream logging
+        if loss_logger is not None:
+            loss_logger(iteration_loss_record)
 
         self.decay_epsilon()
 

@@ -27,6 +27,7 @@ from collections     import deque
 from routerl         import TrafficEnvironment
 from tqdm            import tqdm
 
+import utils
 from baseline_models import BaseLearningModel
 from utils           import clear_SUMO_files
 from utils           import print_agent_counts
@@ -315,6 +316,9 @@ if __name__ == "__main__":
     q_net.set_train()
     global_observation.enable_transition_collection()
 
+    # Create logger for streaming loss
+    loss_logger = utils.CSVLossLogger(path=os.path.join(records_folder, "losses", "losses.csv"), columns=["iteration", "loss"])
+
     for episode in range(training_episodes):
 
         assert global_observation.collect_transitions == True #TODO: keep or remove assertions?
@@ -333,19 +337,20 @@ if __name__ == "__main__":
 
         # --- Network parameter update ---
         if episode > 0 and episode % update_every_k_episodes == 0:
-            q_net.learn() 
+            q_net.learn(loss_logger) 
 
         # --- Plot visualization ---
         if episode % plot_every == 0:
             env.plot_results()
 
         pbar.update()
+    loss_logger.close()
     
-    save_loss_records(
-        records_folder,
-        q_net.training_loss_records,
-        columns=["iteration", "loss"],
-    )
+    # save_loss_records(
+    #     records_folder,
+    #     q_net.training_loss_records,
+    #     columns=["iteration", "loss"],
+    # )
     
     
     ### Testing phase ###
