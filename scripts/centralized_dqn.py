@@ -875,6 +875,7 @@ if __name__ == "__main__":
     dump_config["algorithm"] = ALGORITHM
     dump_config["num_agents"] = num_agents
     dump_config["num_machines"] = num_machines
+    dump_config["experience_collecting_episodes"] = experience_collecting_episodes # cDQN specific
 
     # Renaming 'training_episodes' parameter to match metrics.py assumptions. Previously changed from 'training_eps' to 'training_episodes' 
     # to avoid confusion with epsilon parameters: 'eps_init' and 'eps_decay'. Ideally, this handling would be moved elsewhere
