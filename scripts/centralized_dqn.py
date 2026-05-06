@@ -871,12 +871,13 @@ if __name__ == "__main__":
     dump_config["env_config"] = env_config
     dump_config["task_config"] = task_config
     dump_config["alg_config"] = alg_config
-    dump_config["script"] = os.path.abspath(__file__)
-    dump_config["algorithm"] = ALGORITHM
     dump_config["num_agents"] = num_agents
     dump_config["num_machines"] = num_machines
     dump_config["experience_collecting_episodes"] = experience_collecting_episodes # cDQN specific
+    dump_config["algorithm"] = ALGORITHM
+    dump_config["script"] = os.path.abspath(__file__)
 
+    
     # Renaming 'training_episodes' parameter to match metrics.py assumptions. Previously changed from 'training_eps' to 'training_episodes' 
     # to avoid confusion with epsilon parameters: 'eps_init' and 'eps_decay'. Ideally, this handling would be moved elsewhere
     assert "training_eps" in dump_config or ( ("training_eps" not in dump_config) and ("training_episodes" in dump_config) ) 
