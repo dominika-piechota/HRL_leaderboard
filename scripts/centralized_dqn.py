@@ -1,3 +1,14 @@
+"""
+This script implements centralized DQN approach for the CAV routing task.
+
+The implementation is built around two components:
+- `GlobalObservation`: stores and updates fleet-level state information
+- `cDQN`: selects routes for departing CAVs from global state snapshots
+
+Developed: Sept-Nov 2025, updated Apr-May 2026
+Primary author: M.Sudoł
+"""
+
 from __future__ import annotations
 
 import os
