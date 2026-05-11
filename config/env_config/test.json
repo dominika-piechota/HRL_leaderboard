@@ -4,7 +4,10 @@
     "save_every" : 1,
     "plot_every" : 2,
 
+    "observations" : "previous_agents_plus_start_time",
+
     "number_of_paths" : 4,
     "path_gen_beta" : -5,
-    "num_samples" : 10
+    "num_samples" : 10,
+    "path_gen_workers": 3
 }

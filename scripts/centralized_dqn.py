@@ -764,6 +764,7 @@ def run_episode(
 
 
 # Main script to run the centralized DQN experiment
+logger = logging.getLogger(__name__)
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -795,6 +796,7 @@ if __name__ == "__main__":
     print(f"Task config: {task_config}")
 
     os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+    logging.basicConfig(level=logging.DEBUG)
     logging.getLogger("matplotlib").setLevel(logging.ERROR)
     torch.manual_seed(torch_seed)
     torch.cuda.manual_seed(torch_seed)
@@ -900,9 +902,11 @@ if __name__ == "__main__":
     if run_checks:
         assert update_every_k_episodes >=1 # (mid-episode training not supported)
 
-    if ...
-
     # Initialize the environment
+    config_machine_obs = params.get("observations")
+    if config_machine_obs is not None:
+        logger.debug("Ignoring observation_type=%s in this context. Using GLobalObservation instead.", config_machine_obs)
+
     env = TrafficEnvironment(
         seed = env_seed,
         create_agents = False,
@@ -920,7 +924,7 @@ if __name__ == "__main__":
 
             "machine_parameters" : {
                 "behavior" : av_behavior,
-                "observation_type" : "previous_agents_plus_start_time"
+                # "observation_type" : # ignoring TrafficEnvironment machine observation. Using GlobalObservation.
             }
         },
         environment_parameters = {
