@@ -861,7 +861,6 @@ if __name__ == "__main__":
 
 
 
-
     # Read origin-destinations
     od_file_path = os.path.join(custom_network_folder, f"od_{network}.txt")
     with open(od_file_path, 'r', encoding='utf-8') as f:
@@ -871,9 +870,7 @@ if __name__ == "__main__":
     destinations = data['destinations']
 
     
-
-            
-            
+        
     # Dump exp config to records
     exp_config_path = os.path.join(records_folder, "exp_config.json")
     dump_config = params.copy()
@@ -887,7 +884,7 @@ if __name__ == "__main__":
     dump_config["num_machines"] = num_machines
     dump_config["experience_collecting_episodes"] = experience_collecting_episodes # cDQN specific
     dump_config["algorithm"] = ALGORITHM
-    dump_config["script"] = os.path.abspath(__file__)
+    dump_config["script"] = script_path_for_config(__file__)
 
     
     # Renaming 'training_episodes' parameter to match metrics.py assumptions. Previously changed from 'training_eps' to 'training_episodes' 
@@ -903,6 +900,7 @@ if __name__ == "__main__":
     if run_checks:
         assert update_every_k_episodes >=1 # (mid-episode training not supported)
 
+    if ...
 
     # Initialize the environment
     env = TrafficEnvironment(
@@ -912,9 +910,14 @@ if __name__ == "__main__":
         save_detectors_info = False,
         agent_parameters = {
             "new_machines_after_mutation": num_machines, 
-            "human_parameters" : {
-                "model" : human_model
-            },
+            "human_parameters": {
+                "model": human_model,
+                "alpha": human_alpha,
+                "beta": human_beta,
+                "beta_randomness": human_beta_randomness,
+                "deterministic": human_deterministic,
+             },
+
             "machine_parameters" : {
                 "behavior" : av_behavior,
                 "observation_type" : "previous_agents_plus_start_time"
@@ -926,7 +929,8 @@ if __name__ == "__main__":
         simulator_parameters = {
             "network_name" : network,
             "custom_network_folder" : custom_network_folder,
-            "sumo_type" : "sumo"
+            "sumo_type" : "sumo",
+            "simulation_timesteps" : 180
         }, 
         plotter_parameters = {
             "phases" : phases,
@@ -942,6 +946,7 @@ if __name__ == "__main__":
             "number_of_paths" : number_of_paths,
             "beta" : path_gen_beta,
             "num_samples" : num_samples,
+            "path_gen_workers" : path_gen_workers,
             "visualize_paths" : False
         } 
     )
