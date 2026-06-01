@@ -1,7 +1,7 @@
 {
-    "update_every_k_episodes": 2,
+    "update_every_k_episodes": 1,
     "num_batches": 4,
-    "batch_size": 8,
+    "batch_size": 16,
     "min_buffer_size": 8192,
     "max_buffer_size": 10000,
     "hidden_dims": [
@@ -11,7 +11,7 @@
     ],
     "eps_init": 1.0,
     "eps_decay": 0.998,
-    "lr": 0.003,
+    "lr": 0.001,
     "run_checks": false,
     "smooth_by": -1,
     "plot_choices": "basic",
@@ -37,11 +37,11 @@
     "torch_seed": 0,
     "env_config": "config1_smoothing_off",
     "task_config": "config1",
-    "alg_config": "config1_4000_1_update2ep",
+    "alg_config": "config3",
     "num_agents": 1035,
     "num_machines": 414,
     "experience_collecting_episodes": 20,
     "algorithm": "centralized_dqn",
     "script": "scripts/centralized_dqn.py",
-    "training_eps": 4000
+    "training_eps": 2000
 }
