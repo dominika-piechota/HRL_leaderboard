@@ -1,0 +1,12 @@
+{
+    "training_eps" : 10,
+    "batch_size" : 2,
+    "update_every" : 4,
+    "lr" : 0.001,
+    "num_epochs" : 3,
+    "num_hidden" : 1,
+    "widths" : [16, 16],
+    "clip_eps" : 0.2,
+    "normalize_advantage" : true,
+    "entropy_coef" : 0.1
+}

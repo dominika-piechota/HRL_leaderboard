@@ -144,7 +144,7 @@ python scripts/<script_name> --id <exp_id> --alg-conf <hyperparam_id> --env-conf
 
 where
 
-- ```<scipt_name>``` is the script you wish to run, available scripts are ```ippo_torchrl```, ```iql_torchrl```, ```mappo_torchrl```, ```vdn_torchrl```, ```qmix_torchrl```, ```iql```, ```ippo```,
+- ```<scipt_name>``` is the script you wish to run, available scripts are ```ippo_torchrl```, ```iql_torchrl```, ```mappo_torchrl```, ```vdn_torchrl```, ```qmix_torchrl```, ```iql```, ```ippo```, and ```hyp_ippo```,
 - ```<exp_id>``` is your own experiment identifier, for instance ```random_ing```, 
 - ```<hyperparam_id>``` is the hyperparameterization identifier, it must correspond to a `.json` filename (without extension) in [`config/algo_config`](config/algo_config/). Provided scripts automatically select the algorithm-specific subfolder in this directory.
 - ```<env_conf_id>``` is the environment configuration identifier. It must correspond to a `.json` filename (without extension) in [`config/env_config`](config/env_config/). It is used to parameterize environment-specific processes, such as path generation, disk operations, etc. It is **optional** and by default is set to `config1`.

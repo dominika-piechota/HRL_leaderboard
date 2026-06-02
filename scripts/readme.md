@@ -11,7 +11,8 @@ We deliver here scripts for the experiment runs. Each associated algorithm with 
 
 Moreover, we have two independent algorithms with our custom implementations:
 * ```iql.py``` uses Independent Q-Learning,
-* ```ippo.py``` uses Independent Proximal Policy Optimization.
+* ```ippo.py``` uses Independent Proximal Policy Optimization,
+* ```hyp_ippo.py``` uses Independent Proximal Policy Optimization with hypernetworks.
 
 You can tune, adjust, hyperparameterize and modify all the provided implementations, or create own scripts.
 
