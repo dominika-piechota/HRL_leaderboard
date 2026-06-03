@@ -1,0 +1,25 @@
+{   
+    "training_episodes" : 10,
+
+
+    "update_every_k_episodes" : 1,
+    "num_batches" : 5,
+    "batch_size" : 10,
+
+
+    "min_buffer_size" : 64,
+    "max_buffer_size" : 1024,
+    
+
+    "hidden_dims": [32, 64, 32],
+
+    
+    "eps_init" : 0.2,
+    "eps_decay" : 0.9999,
+
+    "lr" : 0.01,
+
+
+    "run_checks": true
+    
+}
