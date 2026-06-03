@@ -412,6 +412,18 @@ def github_profile_url(username: str) -> str:
     return f"https://github.com/{username}" if username else ""
 
 
+def contributor_profile_id(name: str, username: str) -> str:
+    normalized_username = str(username or "").strip().lower()
+    if normalized_username:
+        return f"github:{normalized_username}"
+
+    normalized_name = re.sub(r"\s+", " ", str(name or "").strip()).casefold()
+    if normalized_name:
+        return f"name:{normalized_name}"
+
+    return ""
+
+
 def repo_relative_path(path: Optional[Path], repo_root: Path) -> str:
     if not path:
         return ""
@@ -433,7 +445,9 @@ def contributor_record(
         if repo_file
         else ("", "")
     )
+    contributor_id = contributor_profile_id(contributor_name, contributor_username)
     return {
+        "contributor_id": contributor_id,
         "role": role,
         "contribution": contribution,
         "name": contributor_name,
@@ -442,6 +456,36 @@ def contributor_record(
         "url": github_profile_url(contributor_username),
         "path": repo_relative_path(repo_file, repo_root),
     }
+
+
+def build_contributor_pool(experiment_groups: Sequence[Sequence[Dict]]) -> Dict[str, Dict[str, str]]:
+    pool: Dict[str, Dict[str, str]] = {}
+    for experiments in experiment_groups:
+        for exp in experiments:
+            for contributor in exp.get("contributors") or []:
+                contributor_id = contributor.get("contributor_id") or contributor_profile_id(
+                    contributor.get("name", ""),
+                    contributor.get("username", ""),
+                )
+                if not contributor_id or contributor_id in pool:
+                    continue
+                pool[contributor_id] = {
+                    "id": contributor_id,
+                    "name": contributor.get("name", ""),
+                    "username": contributor.get("username", ""),
+                    "avatar": contributor.get("avatar", ""),
+                    "url": contributor.get("url", ""),
+                }
+    return pool
+
+
+def compact_contributor_records(experiments: Sequence[Dict]) -> None:
+    for exp in experiments:
+        for contributor in exp.get("contributors") or []:
+            contributor.pop("name", None)
+            contributor.pop("username", None)
+            contributor.pop("avatar", None)
+            contributor.pop("url", None)
 
 
 def validate_strings(strings: Dict, strings_path: Path) -> None:
@@ -807,6 +851,9 @@ def main(args: Optional[Sequence[str]] = None) -> None:
     template = load_template(parsed.template_path)
     raw_experiments = collect_experiments(parsed.results_dir)
     experiments = collapse_repeated_experiments(raw_experiments)
+    contributor_pool = build_contributor_pool([raw_experiments, experiments])
+    compact_contributor_records(raw_experiments)
+    compact_contributor_records(experiments)
 
     repo_url = parsed.repo_url or infer_default_repo_url(strings)
     build_experiment_links(raw_experiments, repo_url, parsed.local_link_prefix)
@@ -821,6 +868,7 @@ def main(args: Optional[Sequence[str]] = None) -> None:
         .replace("+00:00", "Z"),
         "results_dir": str(parsed.results_dir),
         "raw_repo_base": raw_repo_base,
+        "contributors": contributor_pool,
         "experiments": experiments,
         "raw_experiments": raw_experiments,
         "strings": strings,

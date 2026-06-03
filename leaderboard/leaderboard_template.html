@@ -961,6 +961,8 @@
 
     const metricDescriptions = strings.metric_descriptions || {};
     const headerLabels = strings.table_headers || {};
+    const contributorProfiles = leaderboardData.contributors || {};
+    const avatarTemplateCache = new Map();
 
     const unknownEnv = strings.unknown_env || 'unknown-env';
     const unknownTask = strings.unknown_task || 'unknown-task';
@@ -1215,19 +1217,34 @@
 
     function contributorsFor(exp) {
       if (Array.isArray(exp.contributors) && exp.contributors.length) {
-        return exp.contributors;
+        return exp.contributors.map(resolveContributor);
       }
 
       return [
-        {
+        resolveContributor({
           role: 'Script',
           contribution: exp.script ? `Script - ${exp.script}` : 'Script',
           name: exp.script_contributor || '',
           username: exp.script_contributor_username || '',
           avatar: exp.script_contributor_avatar || '',
           url: exp.script_contributor_url || '',
-        },
+        }),
       ];
+    }
+
+    function resolveContributor(contributor) {
+      const contributorId = contributor?.contributor_id || contributor?.id || '';
+      const profile = contributorId && contributorProfiles[contributorId]
+        ? contributorProfiles[contributorId]
+        : {};
+      return {
+        ...contributor,
+        id: contributorId || contributor?.id || '',
+        name: contributor?.name || profile.name || '',
+        username: contributor?.username || profile.username || '',
+        avatar: contributor?.avatar || profile.avatar || '',
+        url: contributor?.url || profile.url || '',
+      };
     }
 
     function contributorName(contributor) {
@@ -1257,12 +1274,9 @@
     function createContributorAvatar(contributor) {
       const name = contributorName(contributor);
       if (contributor?.avatar) {
-        const avatar = document.createElement('img');
+        const avatar = avatarImageFor(contributor.avatar);
         avatar.className = 'contributor-avatar';
-        avatar.src = contributor.avatar;
         avatar.alt = `${name} avatar`;
-        avatar.loading = 'lazy';
-        avatar.referrerPolicy = 'no-referrer';
         avatar.onerror = () => {
           avatar.replaceWith(createContributorAvatar({ ...contributor, avatar: '' }));
         };
@@ -1274,6 +1288,18 @@
       fallback.textContent = contributorInitials(contributor);
       fallback.setAttribute('aria-hidden', 'true');
       return fallback;
+    }
+
+    function avatarImageFor(src) {
+      if (!avatarTemplateCache.has(src)) {
+        const template = document.createElement('img');
+        template.src = src;
+        template.loading = 'lazy';
+        template.referrerPolicy = 'no-referrer';
+        avatarTemplateCache.set(src, template);
+      }
+
+      return avatarTemplateCache.get(src).cloneNode(false);
     }
 
     function contributorSortValue(contributors) {
