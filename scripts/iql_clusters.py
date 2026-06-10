@@ -110,7 +110,7 @@ class DQN(BaseLearningModel):
         self.decay_epsilon()
 
     def decay_epsilon(self):
-        self.epsilon *= self.eps_decay
+        self.epsilon = max(self.eps_min, self.epsilon * self.eps_decay)
 
 
 class Network(nn.Module):
