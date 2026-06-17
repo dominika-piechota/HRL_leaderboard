@@ -38,7 +38,7 @@
     "env_config": "clusters_eta",
     "task_config": "selfish_40",
     "alg_config": "config3_longer",
-    "script": "/app/scripts/iql_clusters2.py",
+    "script": "/app/scripts/iql_clusters.py",
     "algorithm": "iql",
     "num_agents": 1035,
     "num_machines": 414,
